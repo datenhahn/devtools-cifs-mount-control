@@ -1,0 +1,37 @@
+name: smb-copier
+version: 0.1.0
+summary: A small debugging daemon for ticket 5689 (cifs-mount-control)
+description: |
+  https://forum.snapcraft.io/t/interface-mount-umount-cifs-share-permission/5689
+
+grade: devel
+confinement: strict
+
+parts:
+  smb-copier:
+    plugin: dump
+    source: .
+    organize:
+       main: bin/smb-copier
+
+  mount:
+    plugin: nil
+    stage-packages:
+      - mount
+      - cifs-utils
+    organize:
+      sbin/mount.cifs: bin/mount.cifs
+    prime:
+      - bin/mount
+      - bin/umount
+      - bin/mount.cifs
+apps:
+
+  smb-copier:
+    command: smb-copier -smbShare "//192.168.123.1/sambashare"
+    daemon: simple
+    restart-condition: always
+    plugs:
+      - network-bind
+      - cifs-mount-control
+      - mount-observe
