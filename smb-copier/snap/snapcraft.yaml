@@ -33,5 +33,5 @@ apps:
     restart-condition: always
     plugs:
       - network-bind
-      - cifs-mount-control
+      - cifs-mount
       - mount-observe
